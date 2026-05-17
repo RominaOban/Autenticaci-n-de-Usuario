@@ -53,9 +53,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errores[] = 'Las contraseñas no coinciden.';
     }
 
-    // ── Verificar correo ────────
+    // ── Verificar correo y cédula ────────────────
     if (empty($errores)) {
-        $pdo  = conectar();
+        $pdo = conectar();
+
         $stmt = $pdo->prepare('SELECT id FROM usuarios WHERE correo = ? LIMIT 1');
         $stmt->execute([$correo]);
         if ($stmt->fetch()) {
@@ -63,9 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-        // ── Verificar cédula duplicados ────────
     if (empty($errores)) {
-        $pdo  = conectar();
         $stmt = $pdo->prepare('SELECT id FROM usuarios WHERE cedula = ? LIMIT 1');
         $stmt->execute([$cedula]);
         if ($stmt->fetch()) {
@@ -76,7 +75,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // ── Insertar usuario ──────────────────────────
     if (empty($errores)) {
         $hash = password_hash($password, PASSWORD_BCRYPT, ['cost' => 12]);
-        $pdo  = conectar();
         $stmt = $pdo->prepare(
             'INSERT INTO usuarios (cedula, nombre, correo, password) VALUES (?, ?, ?, ?)'
         );
@@ -159,6 +157,7 @@ $csrf = generarCsrf();
         <input type="password" id="password" name="password"
                placeholder="Mínimo 8 caracteres" autocomplete="new-password" required>
         <div class="strength-bar"><div class="strength-fill" id="sbar"></div></div>
+        <p class="field-hint" id="strength-text"></p>
       </div>
 
       <div class="form-group">
@@ -178,19 +177,58 @@ $csrf = generarCsrf();
 </div>
 
 <script>
-// Indicador de fortaleza de contraseña (solo visual)
-document.getElementById('password').addEventListener('input', function () {
+
+// =============================================
+// Indicador de fortaleza
+// =============================================
+
+const pwInput = document.getElementById('password');
+
+const bar = document.getElementById('sbar');
+
+const strText = document.getElementById('strength-text');
+
+const labels = [
+  'Muy débil',
+  'Débil',
+  'Aceptable',
+  'Fuerte'
+];
+
+const colors = [
+  '#f87171',
+  '#fbbf24',
+  '#34d399',
+  '#5b7cfa'
+];
+
+pwInput.addEventListener('input', function () {
+
   const v = this.value;
-  const bar = document.getElementById('sbar');
-  let score = 0;
-  if (v.length >= 8)  score++;
-  if (/[A-Z]/.test(v)) score++;
-  if (/[0-9]/.test(v)) score++;
-  if (/[^A-Za-z0-9]/.test(v)) score++;
-  const colors = ['#f87171','#fbbf24','#34d399','#5b7cfa'];
-  bar.style.width  = (score * 25) + '%';
-  bar.style.background = colors[score - 1] || 'var(--border)';
+
+  let s = 0;
+
+  if (v.length >= 8)          s++;
+  if (/[A-Z]/.test(v))        s++;
+  if (/[0-9]/.test(v))        s++;
+  if (/[^A-Za-z0-9]/.test(v)) s++;
+
+  // Cambiar ancho barra
+  bar.style.width = (s * 25) + '%';
+
+  // Cambiar color
+  bar.style.background =
+    colors[s - 1] || 'var(--border)';
+
+  // Texto descriptivo
+  strText.textContent =
+    v.length ? labels[s - 1] || '' : '';
+
+  strText.style.color =
+    colors[s - 1] || 'var(--text-muted)';
+
 });
+
 </script>
 </body>
 </html>
