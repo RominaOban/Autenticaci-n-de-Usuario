@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS usuarios (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- -----------------------------------------------
--- Usuario de prueba (password: Test1234!)
+-- Usuario de prueba (password: password)
 -- -----------------------------------------------
 INSERT INTO usuarios (cedula, nombre, correo, password) VALUES
 (
@@ -33,17 +33,3 @@ INSERT INTO usuarios (cedula, nombre, correo, password) VALUES
 );
 -- NOTA: El hash de arriba corresponde a la contraseña "password"
 -- Para producción, registra tu propio usuario desde el formulario.
-
-DROP TABLE IF EXISTS usuarios;
-
-CREATE TABLE usuarios (
-    id             INT UNSIGNED    NOT NULL AUTO_INCREMENT,
-    cedula         VARCHAR(20)     NOT NULL,
-    nombre         VARCHAR(100)    NOT NULL,
-    correo         VARCHAR(150)    NOT NULL,
-    password       VARCHAR(255)    NOT NULL,
-    fecha_registro DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (id),
-    UNIQUE KEY uq_correo (correo),
-    UNIQUE KEY uq_cedula (cedula)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
