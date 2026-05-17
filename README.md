@@ -1,10 +1,10 @@
-# 🔐 Sistema de Autenticación PHP + MySQL
+#  Sistema de Autenticación PHP + MySQL
 
 Sistema web que implementa autenticación de usuarios con manejo seguro de sesiones, zona privada de perfil y cambio de contraseña, desarrollado con PHP y MySQL usando XAMPP como entorno local.
 
 ---
 
-## 📋 Descripción
+##  Descripción
 
 Esta aplicación permite a los usuarios registrarse, iniciar sesión y gestionar su perfil de forma segura. Fue desarrollada como práctica de los conceptos de autenticación, manejo de sesiones y actualización segura de datos en PHP.
 
@@ -18,7 +18,7 @@ Esta aplicación permite a los usuarios registrarse, iniciar sesión y gestionar
 
 ---
 
-## 🛠️ Requisitos
+##  Requisitos
 
 | Herramienta | Versión recomendada |
 |---|---|
@@ -51,7 +51,7 @@ sistema_auth/
 
 ---
 
-## 🚀 Instalación y prueba local
+##  Instalación y prueba local
 
 ### 1. Clonar o descargar el repositorio
 
@@ -103,7 +103,7 @@ Serás redirigido al login automáticamente.
 
 ---
 
-## 🧪 Prueba rápida
+##  Prueba rápida
 
 Puedes registrar tu propio usuario desde el formulario, o usar el usuario de demostración que se crea con el script SQL:
 
@@ -114,7 +114,7 @@ Puedes registrar tu propio usuario desde el formulario, o usar el usuario de dem
 
 ---
 
-## 🔒 Seguridad implementada
+##  Seguridad implementada
 
 | Mecanismo | Implementación |
 |---|---|
@@ -129,7 +129,7 @@ Puedes registrar tu propio usuario desde el formulario, o usar el usuario de dem
 
 ---
 
-## 📄 Descripción de archivos clave
+##  Descripción de archivos clave
 
 **`includes/config.php`** — Configura la conexión PDO a MySQL con manejo de errores. Usa el patrón singleton para no abrir múltiples conexiones.
 
