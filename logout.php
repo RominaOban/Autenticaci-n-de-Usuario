@@ -6,5 +6,5 @@ require_once 'includes/auth.php';
 iniciarSesion();
 destruirSesion();
 
-header('Location: login.php?logout=1');
+header('Location: login.php?sesion=cerrada');
 exit;
