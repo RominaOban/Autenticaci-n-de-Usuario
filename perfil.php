@@ -79,8 +79,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['usuario_correo'] = $correo;
 
         // Recargar datos actualizados
-        $stmt->execute([$usuario['id']]);
-        $usuario = $stmt->fetch();
+        $reload = $pdo->prepare('SELECT * FROM usuarios WHERE id = ? LIMIT 1');
+        $reload->execute([$usuario['id']]);
+        $usuario = $reload->fetch();
 
         $exito = 'Perfil actualizado correctamente.';
     }
