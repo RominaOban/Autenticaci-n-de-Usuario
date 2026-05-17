@@ -27,9 +27,26 @@ $errores = [];
 $exito   = '';
 
 // ─────────────────────────────────────────────
+// Protección contra fuerza bruta
+// ─────────────────────────────────────────────
+const CP_MAX_INTENTOS  = 5;
+const CP_BLOQUEO_SEG   = 300; // 5 minutos
+
+$ahora        = time();
+$intentos     = $_SESSION['cp_intentos']   ?? 0;
+$bloqueado_en = $_SESSION['cp_bloqueado']  ?? 0;
+
+$bloqueado = $bloqueado_en && ($ahora - $bloqueado_en) < CP_BLOQUEO_SEG;
+
+if ($bloqueado) {
+    $restante = CP_BLOQUEO_SEG - ($ahora - $bloqueado_en);
+    $errores[] = 'Demasiados intentos fallidos. Espera ' . ceil($restante / 60) . ' minuto(s) antes de intentarlo de nuevo.';
+}
+
+// ─────────────────────────────────────────────
 // Procesar formulario
 // ─────────────────────────────────────────────
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$bloqueado) {
 
     verificarCsrf();
 
@@ -46,7 +63,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($errores)) {
 
         if (!password_verify($actual, $usuario['password'])) {
-            $errores[] = 'La contraseña actual no es correcta.';
+
+            // Registrar intento fallido
+            $intentos++;
+            $_SESSION['cp_intentos'] = $intentos;
+
+            if ($intentos >= CP_MAX_INTENTOS) {
+                $_SESSION['cp_bloqueado'] = $ahora;
+                $_SESSION['cp_intentos']  = 0;
+                $errores[] = 'Demasiados intentos fallidos. Espera 5 minuto(s) antes de intentarlo de nuevo.';
+            } else {
+                $restantes = CP_MAX_INTENTOS - $intentos;
+                $errores[] = 'La contraseña actual no es correcta. Intentos restantes: ' . $restantes . '.';
+            }
         }
     }
 
@@ -76,6 +105,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         );
 
         $upd->execute([$hash, $usuario['id']]);
+
+        // Resetear contadores al tener éxito
+        unset($_SESSION['cp_intentos'], $_SESSION['cp_bloqueado']);
 
         $exito = '¡Contraseña actualizada correctamente!';
     }
