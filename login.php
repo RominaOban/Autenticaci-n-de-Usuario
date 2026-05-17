@@ -13,12 +13,17 @@ if (estaAutenticado()) {
 $error  = '';
 $correo = '';
 
-// Mensaje si viene de logout o sesión expirada
+// Mensaje de advertencia (sesión expirada o acceso denegado)
 $info = match($_GET['error'] ?? '') {
     'sesion'  => 'Tu sesión expiró. Inicia sesión nuevamente.',
     'acceso'  => 'Debes iniciar sesión para acceder a esa página.',
     default   => ''
 };
+
+// Mensaje de éxito al cerrar sesión
+$infoExito = (($_GET['sesion'] ?? '') === 'cerrada')
+    ? 'Sesión cerrada correctamente.'
+    : '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     verificarCsrf();
@@ -79,7 +84,17 @@ $csrf = generarCsrf();
       Ingresa tus credenciales para continuar.
     </p>
 
-    <!-- Mensaje informativo -->
+    <!-- Sesión cerrada -->
+    <?php if ($infoExito): ?>
+      <div class="alert alert-success">
+        <span class="alert-icon">
+          <i class="fa-solid fa-circle-check"></i>
+        </span>
+        <?= e($infoExito) ?>
+      </div>
+    <?php endif; ?>
+
+    <!-- Mensaje informativo (sesión expirada / acceso denegado) -->
     <?php if ($info): ?>
       <div class="alert alert-warning">
 
