@@ -56,7 +56,7 @@ sistema_auth/
 ### 1. Clonar o descargar el repositorio
 
 ```bash
-git clone https://github.com/tu-usuario/sistema_auth.git
+git clone https://github.com/RominaOban/Autenticaci-n-de-Usuario.git
 ```
 
 O descarga el ZIP desde GitHub y descomprímelo.
