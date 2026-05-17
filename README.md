@@ -1,6 +1,33 @@
-# SecureApp — Sistema de Autenticación PHP
+# 🔐 Sistema de Autenticación PHP + MySQL
 
-Sistema web completo de autenticación con PHP, MySQL y XAMPP.
+Sistema web que implementa autenticación de usuarios con manejo seguro de sesiones, zona privada de perfil y cambio de contraseña, desarrollado con PHP y MySQL usando XAMPP como entorno local.
+
+---
+
+## 📋 Descripción
+
+Esta aplicación permite a los usuarios registrarse, iniciar sesión y gestionar su perfil de forma segura. Fue desarrollada como práctica de los conceptos de autenticación, manejo de sesiones y actualización segura de datos en PHP.
+
+**Funcionalidades principales:**
+- Registro de usuarios con validación de datos
+- Login con verificación segura de credenciales
+- Zona privada de perfil (solo accesible con sesión activa)
+- Actualización de nombre y correo electrónico
+- Cambio de contraseña verificando la contraseña actual
+- Cierre de sesión que destruye completamente la sesión
+
+---
+
+## 🛠️ Requisitos
+
+| Herramienta | Versión recomendada |
+|---|---|
+| XAMPP | 8.x o superior |
+| PHP | 8.0 o superior |
+| MySQL | 5.7 o superior |
+| Navegador | Cualquier navegador moderno |
+
+> No se requieren librerías externas. Todo el sistema usa PHP nativo y PDO.
 
 ---
 
@@ -8,118 +35,112 @@ Sistema web completo de autenticación con PHP, MySQL y XAMPP.
 
 ```
 sistema_auth/
-├── index.php                  ← Redirección automática
-├── registro.php               ← Registro de usuarios
-├── login.php                  ← Inicio de sesión
-├── perfil.php                 ← Zona privada (requiere sesión)
-├── cambiar_password.php       ← Cambio de contraseña
+├── index.php                  ← Redirección automática (login o perfil)
+├── registro.php               ← Formulario de registro de usuarios
+├── login.php                  ← Formulario de inicio de sesión
+├── perfil.php                 ← Zona privada: ver y actualizar perfil
+├── cambiar_password.php       ← Cambio seguro de contraseña
 ├── logout.php                 ← Cierre de sesión
-├── database.sql               ← Script para crear la BD
+├── database.sql               ← Script SQL para crear la base de datos
 ├── css/
-│   └── estilo.css             ← Estilos del sistema
+│   └── estilo.css             ← Estilos del sistema (tema oscuro)
 └── includes/
-    ├── config.php             ← Configuración de BD y conexión PDO
-    └── auth.php               ← Funciones de autenticación
+    ├── config.php             ← Conexión PDO a MySQL
+    └── auth.php               ← Funciones de autenticación y sesión
 ```
 
 ---
 
-## 🚀 Pasos de instalación
+## 🚀 Instalación y prueba local
 
-### 1. Preparar XAMPP
+### 1. Clonar o descargar el repositorio
+
+```bash
+git clone https://github.com/tu-usuario/sistema_auth.git
+```
+
+O descarga el ZIP desde GitHub y descomprímelo.
+
+### 2. Copiar a XAMPP
+
+Mueve la carpeta `sistema_auth` dentro de:
+
+```
+C:\xampp\htdocs\sistema_auth\
+```
+
+### 3. Iniciar XAMPP
+
 - Abre **XAMPP Control Panel**
-- Inicia **Apache** y **MySQL**
+- Inicia los servicios **Apache** y **MySQL**
 
-### 2. Crear la base de datos
-- Abre tu navegador y ve a: `http://localhost/phpmyadmin`
-- Haz clic en **"SQL"** (pestaña superior)
-- Pega el contenido del archivo **`database.sql`** y haz clic en **"Continuar"**
-- Esto creará la base de datos `sistema_auth` con la tabla `usuarios`
+### 4. Crear la base de datos
 
-### 3. Copiar los archivos
-- Copia la carpeta **`sistema_auth`** dentro de:
-  ```
-  C:\xampp\htdocs\sistema_auth\
-  ```
+- Abre el navegador y ve a `http://localhost/phpmyadmin`
+- Haz clic en la pestaña **SQL**
+- Pega el contenido del archivo `database.sql` y haz clic en **Continuar**
 
-### 4. Verificar configuración
-- Abre `includes/config.php`
-- Confirma que los valores sean correctos:
-  ```php
-  define('DB_HOST', 'localhost');
-  define('DB_NAME', 'sistema_auth');
-  define('DB_USER', 'root');
-  define('DB_PASS', '');   // Vacío por defecto en XAMPP
-  ```
+Esto creará automáticamente la base de datos `sistema_auth` con la tabla `usuarios`.
 
-### 5. Probar el sistema
-- Abre el navegador y ve a: `http://localhost/sistema_auth/`
-- Serás redirigido al **login**
+### 5. Verificar la configuración
 
----
+Abre `includes/config.php` y confirma que los datos coincidan con tu entorno:
 
-## 🧪 Usuario de prueba
+```php
+define('DB_HOST', 'localhost');
+define('DB_NAME', 'sistema_auth');
+define('DB_USER', 'root');
+define('DB_PASS', '');        // En XAMPP por defecto está vacío
+```
 
-| Campo    | Valor            |
-|----------|------------------|
-| Correo   | demo@correo.com  |
-| Contraseña | password       |
+### 6. Abrir en el navegador
 
-> ⚠️ Este usuario es solo para pruebas. Regístralo correctamente desde el formulario en producción.
+```
+http://localhost/sistema_auth/
+```
+
+Serás redirigido al login automáticamente.
 
 ---
 
-## 🔒 Características de seguridad implementadas
+## 🧪 Prueba rápida
 
-| Característica | Detalle |
+Puedes registrar tu propio usuario desde el formulario, o usar el usuario de demostración que se crea con el script SQL:
+
+| Campo | Valor |
 |---|---|
-| `password_hash` | Algoritmo BCRYPT con cost=12 |
-| `password_verify` | Verificación segura en login y cambio de contraseña |
-| Protección CSRF | Token en todos los formularios POST |
-| Sesiones seguras | `session_regenerate_id` al hacer login |
-| Cookies HttpOnly | Protección contra XSS en cookies de sesión |
-| Protección XSS | `htmlspecialchars` en todas las salidas |
-| Consultas seguras | PDO con prepared statements (evita SQL Injection) |
-| Validación servidor | Todos los inputs validados en PHP |
+| Correo | demo@correo.com |
+| Contraseña | password |
 
 ---
 
-## 📄 Descripción de cada archivo
+## 🔒 Seguridad implementada
 
-### `includes/config.php`
-Configura la conexión PDO a MySQL. Contiene la función `conectar()` que usa el patrón singleton para reutilizar la conexión.
+| Mecanismo | Implementación |
+|---|---|
+| Hash de contraseñas | `password_hash()` con BCRYPT, cost=12 |
+| Verificación de contraseña | `password_verify()` — nunca se compara en texto plano |
+| Protección CSRF | Token único por sesión en todos los formularios POST |
+| Prevención de SQL Injection | PDO con prepared statements en todas las consultas |
+| Prevención de XSS | `htmlspecialchars()` en todas las salidas a HTML |
+| Session Fixation | `session_regenerate_id(true)` al autenticarse |
+| Cookies seguras | HttpOnly y SameSite=Strict |
+| Acceso restringido | Verificación de sesión activa en páginas privadas |
 
-### `includes/auth.php`
-Funciones auxiliares:
-- `iniciarSesion()` — Inicia sesión PHP con parámetros seguros
-- `estaAutenticado()` — Verifica si hay sesión activa
-- `requiereAutenticacion()` — Redirige si no hay sesión
-- `crearSesion($usuario)` — Registra al usuario en sesión
-- `destruirSesion()` — Elimina completamente la sesión
-- `e($valor)` — Escapa HTML (anti-XSS)
-- `esCorreoValido($correo)` — Valida formato de correo
-- `generarCsrf()` / `verificarCsrf()` — Tokens CSRF
+---
 
-### `registro.php`
-- Valida cédula, nombre, correo y contraseña
-- Verifica correo/cédula no duplicados
-- Guarda contraseña con `password_hash()`
+## 📄 Descripción de archivos clave
 
-### `login.php`
-- Valida credenciales contra la BD
-- Usa `password_verify()` para comparar
-- Crea sesión segura con `session_regenerate_id()`
+**`includes/config.php`** — Configura la conexión PDO a MySQL con manejo de errores. Usa el patrón singleton para no abrir múltiples conexiones.
 
-### `perfil.php`
-- Requiere sesión activa (`requiereAutenticacion()`)
-- Muestra y permite actualizar nombre y correo
-- Valida que el nuevo correo no esté en uso
+**`includes/auth.php`** — Centraliza toda la lógica de autenticación: iniciar sesión, verificar si está autenticado, crear/destruir sesión, generar tokens CSRF y escapar salidas HTML.
 
-### `cambiar_password.php`
-- Requiere sesión activa
-- Verifica contraseña actual con `password_verify()`
-- Guarda nueva contraseña con `password_hash()`
+**`registro.php`** — Valida cédula, nombre, correo y contraseña. Verifica que el correo y la cédula no estén duplicados antes de insertar.
 
-### `logout.php`
-- Destruye la sesión completamente
-- Redirige al login
+**`login.php`** — Busca al usuario por correo y verifica la contraseña con `password_verify()`. Crea la sesión solo si las credenciales son correctas.
+
+**`perfil.php`** — Página privada que redirige al login si no hay sesión. Permite actualizar nombre y correo con validación en servidor.
+
+**`cambiar_password.php`** — Pide la contraseña actual, la verifica con `password_verify()`, y guarda la nueva con `password_hash()`.
+
+**`logout.php`** — Vacía `$_SESSION`, elimina la cookie de sesión y destruye la sesión del servidor.
